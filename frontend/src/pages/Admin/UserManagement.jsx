@@ -465,9 +465,9 @@ export default function UserManagement() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
-                  minLength={6}
+                  minLength={8}
                 />
-                <small>Minimum 6 characters</small>
+                <small>Minimum 8 characters, must include uppercase, lowercase, and number</small>
               </label>
 
               <label>
@@ -571,9 +571,9 @@ export default function UserManagement() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
-                  minLength={6}
+                  minLength={8}
                 />
-                <small>Minimum 6 characters</small>
+                <small>Minimum 8 characters, must include uppercase, lowercase, and number</small>
               </label>
 
               <div className={styles.modalActions}>

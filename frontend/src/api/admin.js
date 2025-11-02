@@ -24,7 +24,15 @@ async function api(path, { method = "GET", body, params } = {}) {
   } catch (_) {}
 
   if (!res.ok || (data && data.success === false)) {
-    const msg = data?.error?.message || data?.detail || `HTTP ${res.status}`;
+    let msg;
+
+    // 处理 FastAPI 的验证错误（detail 是数组）
+    if (Array.isArray(data?.detail)) {
+      msg = data.detail.map(err => err.msg || JSON.stringify(err)).join("; ");
+    } else {
+      msg = data?.error?.message || data?.detail || `HTTP ${res.status}`;
+    }
+
     return { ok: false, message: msg, code: data?.error?.code };
   }
 
