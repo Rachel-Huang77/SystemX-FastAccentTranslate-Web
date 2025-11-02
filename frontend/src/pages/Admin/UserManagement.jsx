@@ -54,16 +54,19 @@ export default function UserManagement() {
     try {
       const params = {
         page,
-        limit,
-        search: searchTerm || undefined,
-        role: roleFilter || undefined,
-        is_active: statusFilter === "active" ? true : statusFilter === "inactive" ? false : undefined
+        limit
       };
+
+      // 只添加有值的参数
+      if (searchTerm) params.search = searchTerm;
+      if (roleFilter) params.role = roleFilter;
+      if (statusFilter === "active") params.is_active = true;
+      if (statusFilter === "inactive") params.is_active = false;
 
       const resp = await getUserList(params);
       if (resp.ok) {
-        setUsers(resp.data.items || []);
-        setTotal(resp.data.total || 0);
+        setUsers(resp.data.users || []);
+        setTotal(resp.data.pagination?.total || 0);
       } else {
         alert(resp.message || "Failed to load users");
       }
