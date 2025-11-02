@@ -1,5 +1,5 @@
 // src/api/conversations.js
-const BASE_URL = "http://localhost:8000/api/v1"; // 用 localhost，保证 Cookie 同站
+const BASE_URL = import.meta.env.VITE_API_BASE_URL + "/api/v1"; // 用环境变量，保证 Cookie 同站
 
 async function api(path, { method = "GET", body } = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
