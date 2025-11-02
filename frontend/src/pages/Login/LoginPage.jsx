@@ -38,6 +38,7 @@ export default function LoginPage() {
         localStorage.setItem("authToken", resp.token || "mock-token");
         localStorage.setItem("authUserId", resp.user?.id || resp.userId || username);
         localStorage.setItem("authUsername", resp.user?.username || username);
+        localStorage.setItem("authUserRole", resp.user?.role || "user");
         navigate("/dashboard");
       } else {
         alert(resp.message || "Login failed.");

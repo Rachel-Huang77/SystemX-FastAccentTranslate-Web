@@ -68,6 +68,8 @@ export default function Dashboard() {
     localStorage.getItem("authUsername") ||
     sessionStorage.getItem("authUsername") ||
     "User";
+  const userRole =
+    localStorage.getItem("authUserRole") || sessionStorage.getItem("authUserRole") || "user";
 
   useEffect(() => {
     if (!userId) navigate("/login", { replace: true });
@@ -422,6 +424,11 @@ export default function Dashboard() {
           <span className={styles.hiText}>Hi, {username}!</span>
           {menuOpen && (
             <div className={styles.dropdown}>
+              {userRole === "admin" && (
+                <button onClick={() => { setMenuOpen(false); navigate("/admin/users"); }}>
+                  <span className={styles.icon}>👥</span> User Management
+                </button>
+              )}
               <button onClick={() => { setMenuOpen(false); setUpgradeOpen(true); }}>
                 <span className={styles.icon}>🌐</span> Update Model
               </button>
