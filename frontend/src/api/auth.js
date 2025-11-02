@@ -25,7 +25,7 @@ export async function login({ username, password }) {
   const r = await api("/auth/login", { method: "POST", body: { username, password } });
   if (!r.ok) return r;
   const { user, accessToken } = r.data;
-  return { ok: true, token: accessToken, user: { id: user.id, username: user.username, email: user.email ?? "" } };
+  return { ok: true, token: accessToken, user: { id: user.id, username: user.username, email: user.email ?? "", role: user.role ?? "user" } };
 }
 
 /**

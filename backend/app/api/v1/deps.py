@@ -28,3 +28,15 @@ async def get_current_user(
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="AUTH_USER_NOT_FOUND")
     return user
+
+
+async def require_admin(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    """要求管理员权限"""
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限"
+        )
+    return current_user
