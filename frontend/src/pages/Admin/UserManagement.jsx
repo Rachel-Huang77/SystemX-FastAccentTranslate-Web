@@ -21,7 +21,6 @@ export default function UserManagement() {
   const [total, setTotal] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
 
   // Selected users for batch operations
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -47,7 +46,7 @@ export default function UserManagement() {
   // Load users on mount and when filters change
   useEffect(() => {
     loadUsers();
-  }, [page, searchTerm, roleFilter, statusFilter]);
+  }, [page, searchTerm, roleFilter]);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -60,8 +59,6 @@ export default function UserManagement() {
       // 只添加有值的参数
       if (searchTerm) params.search = searchTerm;
       if (roleFilter) params.role = roleFilter;
-      if (statusFilter === "active") params.is_active = true;
-      if (statusFilter === "inactive") params.is_active = false;
 
       const resp = await getUserList(params);
       if (resp.ok) {
@@ -296,19 +293,6 @@ export default function UserManagement() {
             <option value="user">User</option>
             <option value="admin">Admin</option>
           </select>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setPage(1);
-            }}
-            className={styles.filterSelect}
-          >
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
         </div>
 
         <div className={styles.actions}>
@@ -349,12 +333,11 @@ export default function UserManagement() {
                     onChange={toggleSelectAll}
                   />
                 </th>
+                <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Status</th>
                 <th>Created At</th>
-                <th>Last Login</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -369,6 +352,7 @@ export default function UserManagement() {
                       disabled={user.id === currentUserId}
                     />
                   </td>
+                  <td className={styles.idCell}>{user.id}</td>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
                   <td>
@@ -376,13 +360,7 @@ export default function UserManagement() {
                       {user.role}
                     </span>
                   </td>
-                  <td>
-                    <span className={`${styles.badge} ${user.is_active ? styles.active : styles.inactive}`}>
-                      {user.is_active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
                   <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                  <td>{user.last_login ? new Date(user.last_login).toLocaleDateString() : "Never"}</td>
                   <td>
                     <div className={styles.actionBtns}>
                       <button
@@ -417,7 +395,7 @@ export default function UserManagement() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {!loading && users.length > 0 && (
         <div className={styles.pagination}>
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
@@ -425,7 +403,7 @@ export default function UserManagement() {
           >
             Previous
           </button>
-          <span>Page {page} of {totalPages}</span>
+          <span>Page {page} of {totalPages} (Total: {total} users)</span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
